@@ -46,20 +46,51 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 
-// Animated fade-in on scroll
+// Animated fade-in on scroll - Optimized for mobile performance
+let ticking = false;
+// Only select elements that should have scroll animations, not all sections
+const reveals = document.querySelectorAll('.card, .program-card, .gallery-item, .timeline-item, .achievement-card');
+const windowHeight = window.innerHeight;
+
 function revealOnScroll() {
-  const reveals = document.querySelectorAll('.card, .program-card, .gallery-item, .timeline-item, .achievement-card, section');
-  const windowHeight = window.innerHeight;
-  for (let el of reveals) {
-    const elementTop = el.getBoundingClientRect().top;
-    if (elementTop < windowHeight - 80) {
-      el.classList.add('visible');
-    } else {
-      el.classList.remove('visible');
-    }
+  // Use requestAnimationFrame for smooth performance
+  if (!ticking) {
+    window.requestAnimationFrame(function() {
+      for (let el of reveals) {
+        const elementTop = el.getBoundingClientRect().top;
+        if (elementTop < windowHeight - 80) {
+          el.classList.add('visible');
+        }
+        // Don't remove visible class - once visible, keep it visible
+        // This prevents content from disappearing
+      }
+      ticking = false;
+    });
+    ticking = true;
   }
 }
-window.addEventListener('scroll', revealOnScroll);
+
+// Enhanced scroll throttling for ultra-smooth mobile performance
+let scrollTimeout;
+let lastScrollTime = 0;
+const SCROLL_THROTTLE = 16; // ~60fps for smooth scrolling
+
+window.addEventListener('scroll', function() {
+  const now = performance.now();
+  
+  // Use requestAnimationFrame for smoother performance
+  if (now - lastScrollTime >= SCROLL_THROTTLE) {
+    if (!scrollTimeout) {
+      requestAnimationFrame(function() {
+        revealOnScroll();
+        scrollTimeout = null;
+        lastScrollTime = performance.now();
+      });
+      scrollTimeout = true;
+    }
+  }
+}, { passive: true, capture: false });
+
 window.addEventListener('DOMContentLoaded', revealOnScroll);
 
 // Animate timeline dots
