@@ -26,23 +26,29 @@ button, a, input, textarea, select {
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&family=Nunito:wght@400;700&display=swap');
 
 html {
-  scroll-behavior: smooth;
+  /* Removed scroll-behavior: smooth for better mobile performance */
   -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
   /* Enhanced scrolling for all devices */
   overscroll-behavior: none; /* Prevent overscroll bounce */
   scroll-padding-top: 80px; /* Account for fixed header */
 }
 
-/* Enhanced smooth scrolling for all mobile devices */
-* {
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
-}
-
-/* Optimize scrolling containers */
+/* Optimize scrolling containers - removed will-change as it can hurt performance */
 main, section, .programs-list, .gallery-grid {
   -webkit-overflow-scrolling: touch;
   overscroll-behavior-y: contain;
-  will-change: scroll-position;
+}
+
+/* Isolate sections to prevent repaints during scroll on mobile */
+@media (max-width: 768px) {
+  section {
+    contain: layout style paint;
+  }
+}
+
+/* Isolate sections to prevent repaints during scroll */
+section {
+  contain: layout style paint;
 }
 
 body {
@@ -58,9 +64,6 @@ body {
   -webkit-overflow-scrolling: touch;
   overflow-x: hidden;
   overscroll-behavior: none;
-  /* Smooth momentum scrolling */
-  -webkit-transform: translateZ(0);
-  transform: translateZ(0);
 }
 
 /* Ensure main content is always visible - prevent white screen issue */
@@ -269,8 +272,6 @@ header {
   animation: scroll-left 25s linear infinite;
   white-space: nowrap;
   animation-delay: 0s;
-  will-change: transform;
-  transform: translateZ(0); /* Hardware acceleration */
 }
 
 .announcement-item {
@@ -286,8 +287,6 @@ header {
 .announcement-icon {
   font-size: 1.2rem;
   animation: bounce 2s ease-in-out infinite;
-  will-change: transform;
-  transform: translateZ(0); /* Hardware acceleration */
 }
 
 .announcement-text {
@@ -387,27 +386,126 @@ header {
     animation-duration: 10s; /* Slower animations on mobile */
   }
   
-  /* Optimize scrolling performance - only apply to animated elements */
-  .scrolling-content,
-  .announcement-icon,
+  /* Disable heavy animations on mobile for smooth scrolling */
   .hero-section::before,
-  .hero-section::after,
+  .hero-section::after {
+    animation: none;
+  }
+  
   .hero-container::before,
   .hero-container::after {
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
+    animation: none;
   }
   
-  /* Enhanced smooth scrolling for mobile */
-  html, body {
-    -webkit-overflow-scrolling: touch;
-    overscroll-behavior-y: none;
+  /* Simplify scrolling announcement animation */
+  .scrolling-content {
+    animation-duration: 30s;
   }
   
-  /* Optimize touch scrolling */
-  main, section {
-    -webkit-overflow-scrolling: touch;
-    overscroll-behavior: contain;
+  .announcement-icon {
+    animation: none;
+  }
+  
+  /* Disable tree section animations on mobile */
+  .tree-bubble {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: scale(1) translateY(0) rotate(0deg) !important;
+    transition: none !important;
+  }
+  
+  .tree-badge {
+    transition: none !important;
+  }
+  
+  /* Remove expensive filters on mobile */
+  .tree-svg-container,
+  .tree-img-bg,
+  .fruit,
+  .fruit ellipse {
+    filter: none !important;
+  }
+  
+  /* Disable all hover effects on mobile */
+  .tree-bubble:hover,
+  .tree-badge:hover {
+    transform: none !important;
+    box-shadow: none !important;
+  }
+  
+  /* Simplify tree sections - critical for mobile scrolling performance */
+  .why-tree-section,
+  .realistic-tree-section,
+  .realistic-old-tree-section,
+  .tree-image-section {
+    overflow: visible !important;
+    transform: none !important;
+    will-change: auto !important;
+    contain: layout style paint !important;
+    isolation: isolate !important;
+  }
+  
+  .tree-svg-container,
+  .tree-image-container,
+  .realistic-old-tree-container {
+    transform: none !important;
+    will-change: auto !important;
+    contain: layout style paint !important;
+  }
+  
+  /* Remove expensive filters from tree SVGs on mobile */
+  .why-tree-svg,
+  .realistic-tree-svg,
+  .realistic-old-tree-svg,
+  .tree-svg-container {
+    filter: none !important;
+  }
+  
+  .fruit,
+  .fruit ellipse,
+  .fruit circle {
+    filter: none !important;
+    transition: none !important;
+  }
+  
+  /* Disable photo scroll animation */
+  .photo-scroll-track {
+    animation: none !important;
+  }
+  
+  /* Disable expensive transitions and animations on mobile */
+  .card,
+  .program-card,
+  .gallery-item,
+  .tree-bubble,
+  .tree-badge,
+  .feature-item,
+  .photo-item,
+  .hero-title,
+  .hero-title-highlight,
+  .hero-subtitle,
+  .feature-icon {
+    transition: none !important;
+    animation: none !important;
+  }
+  
+  /* Disable photo scroll animation */
+  .photo-scroll-track {
+    animation: none !important;
+  }
+  
+  /* Keep only essential scrolling animation */
+  .scrolling-content {
+    animation: scroll-left 30s linear infinite !important;
+  }
+  
+  /* Force GPU acceleration off for better scrolling */
+  .why-tree-section,
+  .realistic-tree-section,
+  .realistic-old-tree-section,
+  .tree-image-section {
+    transform: none !important;
+    will-change: auto !important;
   }
 }
 
@@ -423,7 +521,6 @@ header {
   /* Enhanced scrolling for Samsung devices */
   main, section {
     -webkit-overflow-scrolling: touch;
-    scroll-behavior: smooth;
   }
   
   /* Optimize content spacing for tall screens */
@@ -445,7 +542,6 @@ header {
   
   main, section {
     -webkit-overflow-scrolling: touch;
-    scroll-behavior: smooth;
   }
 }
 
@@ -471,7 +567,6 @@ header {
 @media screen and (min-aspect-ratio: 2/1) and (max-aspect-ratio: 21/9) {
   html {
     -webkit-overflow-scrolling: touch;
-    scroll-behavior: smooth;
   }
   
   body {
@@ -509,8 +604,6 @@ header {
     radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
     radial-gradient(circle at 40% 40%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
   animation: floatBackground 20s ease-in-out infinite;
-  will-change: transform;
-  transform: translateZ(0); /* Hardware acceleration */
 }
 
 .hero-section::after {
@@ -522,8 +615,6 @@ header {
   bottom: 0;
   background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="dots" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="1" fill="%23ffffff" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23dots)"/></svg>');
   animation: moveDots 30s linear infinite;
-  will-change: transform;
-  transform: translateZ(0); /* Hardware acceleration */
 }
 
 /* Floating Elements */
@@ -535,8 +626,6 @@ header {
   font-size: 3rem;
   animation: floatElement 6s ease-in-out infinite;
   z-index: 1;
-  will-change: transform;
-  transform: translateZ(0); /* Hardware acceleration */
 }
 
 .hero-container::after {
@@ -547,8 +636,6 @@ header {
   font-size: 2.5rem;
   animation: floatElement 8s ease-in-out infinite reverse;
   z-index: 1;
-  will-change: transform;
-  transform: translateZ(0); /* Hardware acceleration */
 }
 
 .hero-container {
@@ -3558,9 +3645,26 @@ section {
     line-height: 1.4;
   }
   
-  /* Why Tree Section Mobile */
+  /* Why Tree Section Mobile - Optimized for smooth scrolling */
   .why-tree-section {
     padding: 1.5rem 0.75rem 1.25rem 0.75rem;
+    overflow: visible !important;
+    transform: none !important;
+    will-change: auto !important;
+  }
+  
+  .tree-svg-container,
+  .tree-image-container,
+  .realistic-old-tree-container {
+    transform: none !important;
+    will-change: auto !important;
+  }
+  
+  .realistic-tree-section,
+  .realistic-old-tree-section,
+  .tree-image-section {
+    overflow: visible !important;
+    transform: none !important;
   }
   
   /* School Divisions Mobile */

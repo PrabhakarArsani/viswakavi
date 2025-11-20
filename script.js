@@ -46,23 +46,35 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 
-// Animated fade-in on scroll - Optimized for mobile performance
+// Animated fade-in on scroll - Ultra-optimized for mobile performance
 let ticking = false;
+let isScrolling = false;
 // Only select elements that should have scroll animations, not all sections
 const reveals = document.querySelectorAll('.card, .program-card, .gallery-item, .timeline-item, .achievement-card');
-const windowHeight = window.innerHeight;
+let windowHeight = window.innerHeight;
+
+// Update window height on resize
+window.addEventListener('resize', function() {
+  windowHeight = window.innerHeight;
+}, { passive: true });
 
 function revealOnScroll() {
   // Use requestAnimationFrame for smooth performance
   if (!ticking) {
     window.requestAnimationFrame(function() {
+      // Batch DOM reads to prevent layout thrashing
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      const viewportBottom = scrollTop + windowHeight;
+      
+      // Only check elements that haven't been revealed yet
       for (let el of reveals) {
-        const elementTop = el.getBoundingClientRect().top;
-        if (elementTop < windowHeight - 80) {
-          el.classList.add('visible');
+        if (!el.classList.contains('visible')) {
+          // Use offsetTop instead of getBoundingClientRect for better performance
+          const elementTop = el.offsetTop;
+          if (elementTop < viewportBottom - 80) {
+            el.classList.add('visible');
+          }
         }
-        // Don't remove visible class - once visible, keep it visible
-        // This prevents content from disappearing
       }
       ticking = false;
     });
@@ -70,26 +82,38 @@ function revealOnScroll() {
   }
 }
 
-// Enhanced scroll throttling for ultra-smooth mobile performance
+// Ultra-lightweight scroll handler for mobile - minimal processing
 let scrollTimeout;
 let lastScrollTime = 0;
-const SCROLL_THROTTLE = 16; // ~60fps for smooth scrolling
+const SCROLL_THROTTLE = 200; // Increased throttle significantly for better performance
+
+// Detect mobile device
+const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
 window.addEventListener('scroll', function() {
-  const now = performance.now();
-  
-  // Use requestAnimationFrame for smoother performance
-  if (now - lastScrollTime >= SCROLL_THROTTLE) {
-    if (!scrollTimeout) {
+  // On mobile, only run reveal check occasionally
+  if (isMobile) {
+    const now = performance.now();
+    
+    if (now - lastScrollTime >= SCROLL_THROTTLE) {
+      // Use setTimeout instead of requestAnimationFrame for less frequent updates
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(function() {
+        revealOnScroll();
+        lastScrollTime = performance.now();
+      }, 50);
+    }
+  } else {
+    // Desktop: use requestAnimationFrame
+    const now = performance.now();
+    if (now - lastScrollTime >= SCROLL_THROTTLE) {
       requestAnimationFrame(function() {
         revealOnScroll();
-        scrollTimeout = null;
         lastScrollTime = performance.now();
       });
-      scrollTimeout = true;
     }
   }
-}, { passive: true, capture: false });
+}, { passive: true });
 
 window.addEventListener('DOMContentLoaded', revealOnScroll);
 
