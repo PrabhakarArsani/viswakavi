@@ -46,76 +46,46 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 
-// Animated fade-in on scroll - Ultra-optimized for mobile performance
-let ticking = false;
-let isScrolling = false;
-// Only select elements that should have scroll animations, not all sections
-const reveals = document.querySelectorAll('.card, .program-card, .gallery-item, .timeline-item, .achievement-card');
-let windowHeight = window.innerHeight;
-
-// Update window height on resize
-window.addEventListener('resize', function() {
-  windowHeight = window.innerHeight;
-}, { passive: true });
-
-function revealOnScroll() {
-  // Use requestAnimationFrame for smooth performance
-  if (!ticking) {
-    window.requestAnimationFrame(function() {
-      // Batch DOM reads to prevent layout thrashing
-      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-      const viewportBottom = scrollTop + windowHeight;
-      
-      // Only check elements that haven't been revealed yet
-      for (let el of reveals) {
-        if (!el.classList.contains('visible')) {
-          // Use offsetTop instead of getBoundingClientRect for better performance
-          const elementTop = el.offsetTop;
-          if (elementTop < viewportBottom - 80) {
-            el.classList.add('visible');
-          }
-        }
-      }
-      ticking = false;
-    });
-    ticking = true;
-  }
-}
-
-// Ultra-lightweight scroll handler for mobile - minimal processing
-let scrollTimeout;
-let lastScrollTime = 0;
-const SCROLL_THROTTLE = 200; // Increased throttle significantly for better performance
-
+// Ultra-optimized scroll handler - minimal work for maximum smoothness
 // Detect mobile device
 const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
-window.addEventListener('scroll', function() {
-  // On mobile, only run reveal check occasionally
-  if (isMobile) {
-    const now = performance.now();
-    
-    if (now - lastScrollTime >= SCROLL_THROTTLE) {
-      // Use setTimeout instead of requestAnimationFrame for less frequent updates
-      clearTimeout(scrollTimeout);
-      scrollTimeout = setTimeout(function() {
-        revealOnScroll();
-        lastScrollTime = performance.now();
-      }, 50);
-    }
-  } else {
-    // Desktop: use requestAnimationFrame
-    const now = performance.now();
-    if (now - lastScrollTime >= SCROLL_THROTTLE) {
-      requestAnimationFrame(function() {
-        revealOnScroll();
-        lastScrollTime = performance.now();
-      });
-    }
-  }
-}, { passive: true });
-
-window.addEventListener('DOMContentLoaded', revealOnScroll);
+// On mobile, disable scroll animations entirely for maximum smoothness
+if (!isMobile) {
+  // Desktop: Use IntersectionObserver for better performance
+  const reveals = document.querySelectorAll('.card, .program-card, .gallery-item, .timeline-item, .achievement-card');
+  
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target); // Stop observing once visible
+      }
+    });
+  }, {
+    rootMargin: '80px 0px',
+    threshold: 0.1
+  });
+  
+  reveals.forEach(el => observer.observe(el));
+  
+  // Initial check
+  window.addEventListener('DOMContentLoaded', function() {
+    reveals.forEach(el => {
+      const rect = el.getBoundingClientRect();
+      if (rect.top < window.innerHeight) {
+        el.classList.add('visible');
+        observer.unobserve(el);
+      }
+    });
+  });
+} else {
+  // Mobile: Simply add visible class to all elements immediately - no scroll detection
+  window.addEventListener('DOMContentLoaded', function() {
+    const reveals = document.querySelectorAll('.card, .program-card, .gallery-item, .timeline-item, .achievement-card');
+    reveals.forEach(el => el.classList.add('visible'));
+  });
+}
 
 // Animate timeline dots
 window.addEventListener('DOMContentLoaded', function() {
