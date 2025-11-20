@@ -46,12 +46,83 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 
-// Ultra-optimized scroll handler - minimal work for maximum smoothness
+// High Refresh Rate Optimizations (60Hz, 90Hz, 120Hz)
+// Optimized for smooth scrolling at native display refresh rates
+// Uses requestAnimationFrame for maximum smoothness
+
 // Detect mobile device
 const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
-// On mobile, disable scroll animations entirely for maximum smoothness
-if (!isMobile) {
+// Optimized scroll handler using requestAnimationFrame for high refresh rates
+let rafId = null;
+let lastScrollTime = 0;
+
+// High refresh rate scroll optimization
+function optimizeScroll() {
+  // Use requestAnimationFrame for smooth 60/90/120Hz scrolling
+  if (rafId) {
+    cancelAnimationFrame(rafId);
+  }
+  
+  rafId = requestAnimationFrame(() => {
+    // Scroll handling at native refresh rate
+    lastScrollTime = performance.now();
+    rafId = null;
+  });
+}
+
+// Attach scroll listener with requestAnimationFrame for high refresh rates
+if (isMobile) {
+  // Mobile: Use passive scroll listener with requestAnimationFrame
+  window.addEventListener('scroll', optimizeScroll, { passive: true });
+  
+  // Mobile: Simply add visible class to all elements immediately - no scroll detection
+  window.addEventListener('DOMContentLoaded', function() {
+    const reveals = document.querySelectorAll('.card, .program-card, .gallery-item, .timeline-item, .achievement-card');
+    reveals.forEach(el => el.classList.add('visible'));
+  });
+  
+  // Optimize click interactions for high refresh rates (60Hz, 90Hz, 120Hz)
+  // Use requestAnimationFrame for smooth click feedback
+  document.addEventListener('DOMContentLoaded', function() {
+    const clickableElements = document.querySelectorAll('.program-card, .card, .gallery-item, .nav-links a, .cta-btn, .hero-cta');
+    
+    clickableElements.forEach(element => {
+      // Add active class on touchstart for smooth feedback
+      element.addEventListener('touchstart', function(e) {
+        requestAnimationFrame(() => {
+          this.classList.add('touch-active');
+        });
+      }, { passive: true });
+      
+      // Remove active class on touchend
+      element.addEventListener('touchend', function(e) {
+        requestAnimationFrame(() => {
+          this.classList.remove('touch-active');
+        });
+      }, { passive: true });
+      
+      // Also handle mouse events for hybrid devices
+      element.addEventListener('mousedown', function(e) {
+        requestAnimationFrame(() => {
+          this.classList.add('touch-active');
+        });
+      });
+      
+      element.addEventListener('mouseup', function(e) {
+        requestAnimationFrame(() => {
+          this.classList.remove('touch-active');
+        });
+      });
+      
+      element.addEventListener('mouseleave', function(e) {
+        requestAnimationFrame(() => {
+          this.classList.remove('touch-active');
+        });
+      });
+    });
+  });
+} else {
   // Desktop: Use IntersectionObserver for better performance
   const reveals = document.querySelectorAll('.card, .program-card, .gallery-item, .timeline-item, .achievement-card');
   
@@ -78,12 +149,6 @@ if (!isMobile) {
         observer.unobserve(el);
       }
     });
-  });
-} else {
-  // Mobile: Simply add visible class to all elements immediately - no scroll detection
-  window.addEventListener('DOMContentLoaded', function() {
-    const reveals = document.querySelectorAll('.card, .program-card, .gallery-item, .timeline-item, .achievement-card');
-    reveals.forEach(el => el.classList.add('visible'));
   });
 }
 

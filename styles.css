@@ -26,20 +26,27 @@ button, a, input, textarea, select {
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&family=Nunito:wght@400;700&display=swap');
 
 html {
-  /* Removed scroll-behavior: smooth for better mobile performance */
+  /* High refresh rate optimizations (60Hz, 90Hz, 120Hz) */
   -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
-  /* Enhanced scrolling for all devices */
   overscroll-behavior: none; /* Prevent overscroll bounce */
   overscroll-behavior-x: none; /* Prevent horizontal overscroll */
   scroll-padding-top: 80px; /* Account for fixed header */
-  /* Optimize scrolling performance */
   scroll-snap-type: none; /* Disable snap scrolling for smoother experience */
+  /* GPU acceleration for high refresh rate displays */
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
-/* Optimize scrolling containers - removed will-change as it can hurt performance */
+/* Optimize scrolling containers for high refresh rates (60Hz, 90Hz, 120Hz) */
 main, section, .programs-list, .gallery-grid {
   -webkit-overflow-scrolling: touch;
   overscroll-behavior-y: contain;
+  /* GPU acceleration for smooth scrolling at native refresh rates */
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  will-change: scroll-position;
 }
 
 /* Optimize images for smooth scrolling */
@@ -97,10 +104,15 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
-  /* Enhanced scrolling performance */
+  /* High refresh rate scrolling optimizations (60Hz, 90Hz, 120Hz) */
   -webkit-overflow-scrolling: touch;
   overflow-x: hidden;
   overscroll-behavior: none;
+  /* GPU acceleration for smooth high refresh rate scrolling */
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
   /* Prevent layout shifts during scroll */
   contain: layout style;
 }
@@ -631,10 +643,36 @@ header {
     animation: none !important;
   }
   
-  /* Disable expensive transitions and animations on mobile */
+  /* Optimize click interactions for high refresh rates on mobile */
   .card,
   .program-card,
-  .gallery-item,
+  .gallery-item {
+    /* Keep smooth transitions for click feedback but optimize */
+    transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 0.15s cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 0.15s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    /* GPU acceleration for smooth clicks */
+    transform: translateZ(0) !important;
+    -webkit-transform: translateZ(0) !important;
+    will-change: transform !important;
+    touch-action: manipulation !important;
+    -webkit-tap-highlight-color: transparent !important;
+  }
+  
+  /* Smooth active state for touch feedback */
+  .card:active,
+  .program-card:active,
+  .gallery-item:active,
+  .card.touch-active,
+  .program-card.touch-active,
+  .gallery-item.touch-active {
+    transform: scale(0.97) translateZ(0) !important;
+    -webkit-transform: scale(0.97) translateZ(0) !important;
+    transition: transform 0.1s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    opacity: 0.9 !important;
+  }
+  
+  /* Disable other expensive transitions and animations on mobile */
   .tree-bubble,
   .tree-badge,
   .feature-item,
@@ -713,75 +751,70 @@ header {
   }
 }
 
-/* Samsung S Series Optimizations - 20:9 and 19.5:9 aspect ratios */
-/* Samsung S21, S22, S23, S24 (Standard) - 1080x2340 to 1080x2400 */
-@media screen and (min-width: 360px) and (max-width: 430px) and (min-height: 720px) and (max-height: 960px) {
-  /* Optimized for tall screens (20:9 and 19.5:9 ratios) */
-  body {
-    -webkit-overflow-scrolling: touch;
-    overscroll-behavior: none;
-  }
-  
-  /* Enhanced scrolling for Samsung devices */
-  main, section {
-    -webkit-overflow-scrolling: touch;
-  }
-  
-  /* Optimize content spacing for tall screens */
-  .hero-section {
-    padding: 2rem 0;
-  }
-  
-  .program-card, .card {
-    margin-bottom: 1.5rem;
-  }
-}
+/* High Refresh Rate Optimizations (60Hz, 90Hz, 120Hz) */
+/* Optimized for smooth scrolling at native display refresh rates */
+/* Uses GPU acceleration and requestAnimationFrame for maximum smoothness */
 
-/* Samsung S21+, S22+, S23+, S24+ - Larger screens */
-@media screen and (min-width: 430px) and (max-width: 480px) and (min-height: 900px) and (max-height: 1100px) {
-  body {
+/* Base optimizations for all mobile devices */
+@media screen and (max-width: 768px) {
+  /* Enable hardware acceleration for smooth scrolling */
+  html, body {
     -webkit-overflow-scrolling: touch;
     overscroll-behavior: none;
+    /* Force GPU acceleration for smooth 60/90/120Hz scrolling */
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    perspective: 1000px;
+    -webkit-perspective: 1000px;
   }
   
-  main, section {
-    -webkit-overflow-scrolling: touch;
-  }
-}
-
-/* Samsung S Ultra Series - 1440x3200 (20:9) */
-@media screen and (min-width: 480px) and (max-width: 550px) and (min-height: 1000px) {
-  body {
-    -webkit-overflow-scrolling: touch;
-    overscroll-behavior: none;
-  }
-  
-  /* Ultra-specific optimizations */
-  .hero-section {
-    padding: 2.5rem 0;
-  }
-  
-  .program-cards {
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2rem;
-  }
-}
-
-/* General tall screen optimizations (20:9, 19.5:9, 18:9 ratios) */
-@media screen and (min-aspect-ratio: 2/1) and (max-aspect-ratio: 21/9) {
-  html {
-    -webkit-overflow-scrolling: touch;
-  }
-  
-  body {
-    -webkit-overflow-scrolling: touch;
-    overscroll-behavior: none;
-  }
-  
-  /* Smooth momentum scrolling */
-  main, section, .programs-list {
+  /* Optimize main scrolling container */
+  main {
     -webkit-overflow-scrolling: touch;
     overscroll-behavior-y: contain;
+    /* GPU acceleration for smooth scrolling */
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+    will-change: scroll-position;
+  }
+  
+  /* Optimize all sections for smooth scrolling */
+  section {
+    -webkit-overflow-scrolling: touch;
+    /* GPU acceleration */
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+  
+  /* Optimize scrolling containers */
+  .programs-list,
+  .gallery-grid,
+  .scrolling-content {
+    -webkit-overflow-scrolling: touch;
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+    will-change: transform;
+  }
+  
+  /* Optimize cards and items for smooth rendering */
+  .card,
+  .program-card,
+  .gallery-item {
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+  
+  /* Optimize images for smooth scrolling */
+  img {
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+    image-rendering: -webkit-optimize-contrast;
   }
 }
 
@@ -1930,7 +1963,15 @@ footer {
   font-weight: 500;
   line-height: 1.5;
   margin-bottom: 0.5rem;
-  transition: all 0.3s ease;
+  /* High refresh rate optimized transitions */
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+              color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+              padding-left 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  /* GPU acceleration */
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  will-change: transform;
+  touch-action: manipulation;
 }
 
 .program-features li::before {
@@ -1960,8 +2001,16 @@ footer {
 
 .program-features li:hover {
   color: #0d0d0d;
-  transform: translateX(5px);
+  transform: translateX(5px) translateZ(0);
+  -webkit-transform: translateX(5px) translateZ(0);
   padding-left: 2.5rem;
+}
+
+/* Smooth active state for mobile touch feedback */
+.program-features li:active {
+  transform: translateX(3px) scale(0.98) translateZ(0);
+  -webkit-transform: translateX(3px) scale(0.98) translateZ(0);
+  transition: transform 0.1s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .program-features li:hover::before {
@@ -5078,8 +5127,20 @@ section {
   box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
   position: relative;
   overflow: hidden;
-  transition: all 0.3s ease;
+  /* High refresh rate optimized transitions (60Hz, 90Hz, 120Hz) */
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), 
+              box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   border: 1px solid rgba(78, 115, 223, 0.1);
+  /* GPU acceleration for smooth click interactions */
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  will-change: transform;
+  /* Optimize touch interactions */
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .program-card::before {
@@ -5109,8 +5170,18 @@ section {
 }
 
 .program-card:hover {
-  transform: translateY(-8px);
+  transform: translateY(-8px) translateZ(0);
+  -webkit-transform: translateY(-8px) translateZ(0);
   box-shadow: 0 25px 60px rgba(0, 0, 0, 0.15);
+}
+
+/* Smooth active state for mobile touch feedback (high refresh rate optimized) */
+.program-card:active {
+  transform: translateY(-4px) scale(0.98) translateZ(0);
+  -webkit-transform: translateY(-4px) scale(0.98) translateZ(0);
+  transition: transform 0.1s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
 }
 
 .program-card h2 {
