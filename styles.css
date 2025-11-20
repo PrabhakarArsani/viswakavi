@@ -71,12 +71,34 @@ section {
   contain-intrinsic-size: auto 400px; /* Estimate height for better performance */
 }
 
+/* Programs list section - special handling for smooth scrolling on mobile */
+@media (max-width: 768px) {
+  section .programs-list {
+    contain: layout style;
+    content-visibility: auto;
+    contain-intrinsic-size: auto 3000px; /* Estimate for 6 cards */
+  }
+}
+
 /* Enhanced mobile optimizations */
 @media (max-width: 768px) {
   section {
     contain: layout style paint;
     content-visibility: auto;
     contain-intrinsic-size: auto 500px; /* Estimate height for better performance */
+  }
+  
+  /* Programs list section - special optimization for smooth scrolling */
+  section.programs-list {
+    contain: layout style;
+    content-visibility: auto;
+    contain-intrinsic-size: auto 3500px; /* Estimate for 6 cards with spacing */
+    /* Smooth scrolling optimizations */
+    -webkit-overflow-scrolling: touch !important;
+    transform: translateZ(0) !important;
+    -webkit-transform: translateZ(0) !important;
+    backface-visibility: hidden !important;
+    -webkit-backface-visibility: hidden !important;
   }
   
   /* Optimize images for smooth scrolling */
@@ -828,14 +850,19 @@ header {
   
   /* Optimize scrolling containers for smooth high refresh rate scrolling */
   .programs-list {
-    -webkit-overflow-scrolling: touch;
-    transform: translateZ(0);
-    -webkit-transform: translateZ(0);
-    will-change: scroll-position;
+    -webkit-overflow-scrolling: touch !important;
+    transform: translateZ(0) !important;
+    -webkit-transform: translateZ(0) !important;
+    will-change: scroll-position !important;
     /* Ensure smooth scrolling */
-    overscroll-behavior-y: contain;
+    overscroll-behavior-y: contain !important;
+    overscroll-behavior: none !important;
     /* Prevent content clipping */
     overflow: visible !important;
+    overflow-x: hidden !important;
+    /* Smooth scrolling optimizations */
+    backface-visibility: hidden !important;
+    -webkit-backface-visibility: hidden !important;
   }
   
   .gallery-grid,
@@ -3822,73 +3849,31 @@ section {
     color: #ffffff !important;
   }
   
-  /* Programs Page Mobile Optimizations - Ensure all 6 cards are fully visible */
+  /* Programs Page Mobile Optimizations - Small Screens (480px) */
   .programs-list {
-    padding: 1.5rem 0.75rem !important;
+    padding: 1.5rem 0.75rem 2.5rem 0.75rem !important;
     gap: 1.25rem !important;
-    /* Disable all animations for smooth scrolling */
-    animation: none !important;
-    background: linear-gradient(180deg, #2d3e8b 0%, #4e73df 100%) !important;
-    /* Ensure smooth scrolling */
-    -webkit-overflow-scrolling: touch;
-    transform: translateZ(0) !important;
-    -webkit-transform: translateZ(0) !important;
-    overflow: visible !important;
-  }
-  
-  .programs-list::before,
-  .programs-list::after {
-    display: none !important;
-    animation: none !important;
   }
   
   .program-card {
     padding: 1.25rem 1rem !important;
-    margin: 0 !important;
-    /* Ensure full visibility - no content cut off */
-    overflow: visible !important;
-    min-height: auto !important;
-    height: auto !important;
-    max-height: none !important;
-    /* GPU acceleration for smooth scrolling */
-    transform: translateZ(0) !important;
-    -webkit-transform: translateZ(0) !important;
-    /* Prevent content clipping */
-    word-wrap: break-word;
-    overflow-wrap: break-word;
+    border-radius: 0.875rem !important;
   }
   
   .program-card h2 {
-    font-size: 1.3rem !important;
-    margin-bottom: 0.75rem !important;
-    line-height: 1.3 !important;
-    overflow: visible !important;
-    word-wrap: break-word;
-    white-space: normal;
-  }
-  
-  .program-features {
-    margin: 0.75rem 0 0 0 !important;
-    padding: 0 !important;
-    overflow: visible !important;
+    font-size: 1.25rem !important;
+    margin-bottom: 0.875rem !important;
   }
   
   .program-features li {
-    padding: 0.5rem 0 0.5rem 1.75rem !important;
-    margin-bottom: 0.4rem !important;
+    padding: 0.55rem 0 0.55rem 1.75rem !important;
     font-size: 0.9rem !important;
     line-height: 1.5 !important;
-    overflow: visible !important;
-    word-wrap: break-word;
-    white-space: normal;
-    /* Ensure icons don't cause overflow */
-    min-height: 1.5rem;
   }
   
   .program-features li::before {
-    left: 0 !important;
-    top: 0.5rem !important;
     font-size: 0.9rem !important;
+    top: 0.55rem !important;
   }
   
   .hero-actions {
@@ -4820,7 +4805,7 @@ section {
   font-weight: 500;
 }
 
-/* Programs List Enhanced */
+/* Programs List - Redesigned for Smooth Mobile Experience */
 .programs-list {
   max-width: 1200px;
   margin: 0 auto;
@@ -5010,8 +4995,13 @@ section {
   left: 100%;
 }
 
-/* Mobile Responsive for Programs Page - Optimized for smooth scrolling and full visibility */
+/* ============================================
+   MOBILE PROGRAMS PAGE - COMPLETE REBUILD
+   Optimized for smooth 60/90/120Hz scrolling
+   All 6 cards fully visible, no clipping
+   ============================================ */
 @media (max-width: 768px) {
+  /* Programs Hero Section */
   .programs-hero h1 {
     font-size: 2.5rem;
   }
@@ -5020,85 +5010,262 @@ section {
     font-size: 1.1rem;
   }
   
-  /* Optimize programs-list for smooth scrolling and full visibility */
+  /* ============================================
+     PROGRAMS LIST - COMPLETE REBUILD
+     ============================================ */
+  section.programs-list,
   .programs-list {
-    grid-template-columns: 1fr !important;
-    gap: 1.5rem;
-    padding: 2rem 1rem !important;
-    /* Disable heavy animations on mobile for smooth scrolling */
-    animation: none !important;
-    background: linear-gradient(180deg, #2d3e8b 0%, #4e73df 50%, #667eea 100%) !important;
+    /* Layout - Simple Flexbox */
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 1.5rem !important;
+    
+    /* Spacing */
+    padding: 2rem 1rem 3rem 1rem !important;
+    margin: 0 auto !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    
+    /* Background - Static, No Animation */
+    background: linear-gradient(180deg, #2d3e8b 0%, #4e73df 100%) !important;
     background-size: 100% 100% !important;
-    /* Ensure smooth scrolling */
-    -webkit-overflow-scrolling: touch;
-    transform: translateZ(0);
-    -webkit-transform: translateZ(0);
-    will-change: scroll-position;
-    /* Prevent content from being cut off */
-    overflow: visible !important;
-    min-height: auto;
-  }
-  
-  /* Disable expensive pseudo-element animations on mobile */
-  .programs-list::before,
-  .programs-list::after {
+    background-attachment: scroll !important;
     animation: none !important;
-    display: none !important;
-  }
-  
-  /* Ensure all program cards are fully visible */
-  .program-card {
-    padding: 1.5rem 1.25rem !important;
-    margin: 0 !important;
-    /* Ensure full content visibility */
-    overflow: visible !important;
-    min-height: auto;
-    height: auto;
-    /* GPU acceleration for smooth scrolling */
+    
+    /* Smooth Scrolling - GPU Accelerated */
+    -webkit-overflow-scrolling: touch !important;
+    overscroll-behavior: none !important;
+    overscroll-behavior-y: none !important;
     transform: translateZ(0) !important;
     -webkit-transform: translateZ(0) !important;
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
-    /* Prevent content clipping */
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-  }
-  
-  .program-card h2 {
-    font-size: 1.5rem !important;
-    margin-bottom: 1rem !important;
-    line-height: 1.3 !important;
-    /* Ensure heading is fully visible */
+    will-change: scroll-position !important;
+    backface-visibility: hidden !important;
+    -webkit-backface-visibility: hidden !important;
+    perspective: 1000px !important;
+    -webkit-perspective: 1000px !important;
+    
+    /* Visibility - No Clipping */
     overflow: visible !important;
-    word-wrap: break-word;
+    overflow-x: hidden !important;
+    overflow-y: visible !important;
+    min-height: auto !important;
+    height: auto !important;
+    max-height: none !important;
+    
+    /* Performance - Remove Expensive Styles */
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
   }
   
-  /* Ensure program features list is fully visible */
+  /* Disable All Pseudo-Element Animations */
+  .programs-list::before,
+  .programs-list::after {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    animation: none !important;
+    pointer-events: none !important;
+  }
+  
+  /* ============================================
+     PROGRAM CARDS - COMPLETE REBUILD
+     ============================================ */
+  .program-card {
+    /* Layout */
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    padding: 1.5rem 1.25rem !important;
+    margin: 0 !important;
+    
+    /* Styling - Simple & Clean */
+    background: #ffffff !important;
+    border-radius: 0.875rem !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
+    border: 1px solid rgba(78, 115, 223, 0.12) !important;
+    
+    /* Visibility - Full Content Visible */
+    overflow: visible !important;
+    overflow-x: hidden !important;
+    overflow-y: visible !important;
+    min-height: auto !important;
+    height: auto !important;
+    max-height: none !important;
+    
+    /* GPU Acceleration for Smooth Scrolling */
+    transform: translateZ(0) !important;
+    -webkit-transform: translateZ(0) !important;
+    backface-visibility: hidden !important;
+    -webkit-backface-visibility: hidden !important;
+    will-change: auto !important;
+    
+    /* Text Handling */
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
+    white-space: normal !important;
+    text-overflow: clip !important;
+    
+    /* Disable All Animations & Transitions */
+    transition: none !important;
+    animation: none !important;
+  }
+  
+  /* Card Top Border - Simple */
+  .program-card::before {
+    display: block !important;
+    height: 4px !important;
+    animation: none !important;
+    transform: none !important;
+  }
+  
+  /* Disable Hover Effects */
+  .program-card::after {
+    display: none !important;
+    animation: none !important;
+  }
+  
+  .program-card:hover {
+    transform: translateZ(0) !important;
+    -webkit-transform: translateZ(0) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
+  }
+  
+  .program-card:active {
+    transform: translateZ(0) scale(0.99) !important;
+    -webkit-transform: translateZ(0) scale(0.99) !important;
+  }
+  
+  /* ============================================
+     CARD HEADINGS - FULLY VISIBLE
+     ============================================ */
+  .program-card h2 {
+    font-size: 1.4rem !important;
+    font-weight: 700 !important;
+    margin: 0 0 1rem 0 !important;
+    padding: 0 !important;
+    line-height: 1.3 !important;
+    overflow: visible !important;
+    word-wrap: break-word !important;
+    white-space: normal !important;
+    text-overflow: clip !important;
+    color: #2d3e8b !important;
+    display: block !important;
+    width: 100% !important;
+  }
+  
+  /* Color-Coded Headings for Each Card */
+  .program-card:nth-child(1) h2 { color: #4e73df !important; }
+  .program-card:nth-child(2) h2 { color: #f7931e !important; }
+  .program-card:nth-child(3) h2 { color: #e57373 !important; }
+  .program-card:nth-child(4) h2 { color: #00b894 !important; }
+  .program-card:nth-child(5) h2 { color: #9c27b0 !important; }
+  .program-card:nth-child(6) h2 { color: #ff9800 !important; }
+  
+  /* ============================================
+     PROGRAM FEATURES LIST - FULLY VISIBLE
+     ============================================ */
   .program-features {
+    list-style: none !important;
     margin: 1rem 0 0 0 !important;
     padding: 0 !important;
-    /* Ensure list doesn't get cut off */
     overflow: visible !important;
+    width: 100% !important;
+    display: block !important;
   }
   
   .program-features li {
-    padding: 0.6rem 0 0.6rem 2rem !important;
+    position: relative !important;
+    padding: 0.65rem 0 0.65rem 2rem !important;
     margin-bottom: 0.5rem !important;
     font-size: 0.95rem !important;
-    line-height: 1.5 !important;
-    /* Ensure list items are fully visible */
+    line-height: 1.6 !important;
+    color: #1a1a1a !important;
+    font-weight: 500 !important;
+    
+    /* Full Visibility */
     overflow: visible !important;
-    word-wrap: break-word;
-    /* Prevent text clipping */
-    white-space: normal;
+    word-wrap: break-word !important;
+    white-space: normal !important;
+    text-overflow: clip !important;
+    display: block !important;
+    width: 100% !important;
+    min-height: auto !important;
+    
+    /* Disable All Animations */
+    transition: none !important;
+    animation: none !important;
+    transform: none !important;
   }
   
+  /* Feature Icons */
+  .program-features li::before {
+    position: absolute !important;
+    left: 0 !important;
+    top: 0.65rem !important;
+    font-size: 1rem !important;
+    display: block !important;
+    animation: none !important;
+    transform: none !important;
+  }
+  
+  .program-features li:hover {
+    transform: none !important;
+    padding-left: 2rem !important;
+  }
+  
+  /* Paragraphs */
   .program-card p {
-    font-size: 1rem;
+    font-size: 1rem !important;
     line-height: 1.6 !important;
-    /* Ensure paragraphs are fully visible */
+    color: #555 !important;
+    margin: 0 !important;
+    padding: 0 !important;
     overflow: visible !important;
-    word-wrap: break-word;
+    word-wrap: break-word !important;
+    white-space: normal !important;
+    text-overflow: clip !important;
+    display: block !important;
+  }
+}
+
+/* ============================================
+   PROGRAMS PAGE - SMALL SCREENS (480px)
+   Additional optimizations for smaller devices
+   ============================================ */
+@media (max-width: 480px) {
+  .programs-list {
+    padding: 1.5rem 0.75rem 2.5rem 0.75rem !important;
+    gap: 1.25rem !important;
+  }
+  
+  .program-card {
+    padding: 1.25rem 1rem !important;
+    border-radius: 0.75rem !important;
+  }
+  
+  .program-card h2 {
+    font-size: 1.25rem !important;
+    margin-bottom: 0.875rem !important;
+    line-height: 1.3 !important;
+  }
+  
+  .program-features {
+    margin-top: 0.875rem !important;
+  }
+  
+  .program-features li {
+    padding: 0.55rem 0 0.55rem 1.75rem !important;
+    margin-bottom: 0.45rem !important;
+    font-size: 0.9rem !important;
+    line-height: 1.5 !important;
+  }
+  
+  .program-features li::before {
+    font-size: 0.9rem !important;
+    top: 0.55rem !important;
   }
 }
 
