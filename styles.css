@@ -26,17 +26,9 @@ button, a, input, textarea, select {
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&family=Nunito:wght@400;700&display=swap');
 
 html {
-  /* High refresh rate optimizations (60Hz, 90Hz, 120Hz) */
+  /* Basic smooth scrolling */
   -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
-  overscroll-behavior: none; /* Prevent overscroll bounce */
-  overscroll-behavior-x: none; /* Prevent horizontal overscroll */
-  scroll-padding-top: 80px; /* Account for fixed header */
-  scroll-snap-type: none; /* Disable snap scrolling for smoother experience */
-  /* GPU acceleration for high refresh rate displays */
-  transform: translateZ(0);
-  -webkit-transform: translateZ(0);
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
+  scroll-behavior: smooth;
 }
 
 /* Basic scrolling behavior for content areas */
@@ -67,8 +59,15 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
-  /* Prevent horizontal scroll */
+  /* Allow normal page scrolling */
   overflow-x: hidden;
+}
+
+/* Ensure the page itself can always scroll */
+html, body {
+  min-height: 100%;
+  height: auto;
+  overflow-y: auto;
 }
 
 /* Ensure main content is always visible - prevent white screen issue */
