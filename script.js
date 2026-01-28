@@ -3,9 +3,6 @@ document.addEventListener('DOMContentLoaded', function() {
   const navLinks = document.getElementById('navLinks');
   const navOverlay = document.getElementById('navOverlay');
 
-  // Always ensure page scrolling is enabled on load
-  document.body.style.overflow = '';
-
   if (!navToggle || !navLinks || !navOverlay) {
     return;
   }
@@ -14,13 +11,6 @@ document.addEventListener('DOMContentLoaded', function() {
     navLinks.classList.toggle('open');
     navToggle.classList.toggle('active');
     navOverlay.classList.toggle('active');
-    
-    // Prevent body scroll when menu is open
-    if (navLinks.classList.contains('open')) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
   });
 
   // Close menu when clicking overlay
@@ -28,7 +18,6 @@ document.addEventListener('DOMContentLoaded', function() {
     navLinks.classList.remove('open');
     navToggle.classList.remove('active');
     navOverlay.classList.remove('active');
-    document.body.style.overflow = '';
   });
 
   // Close menu when clicking on a nav link
@@ -38,7 +27,6 @@ document.addEventListener('DOMContentLoaded', function() {
       navLinks.classList.remove('open');
       navToggle.classList.remove('active');
       navOverlay.classList.remove('active');
-      document.body.style.overflow = '';
     });
   });
 
@@ -48,7 +36,6 @@ document.addEventListener('DOMContentLoaded', function() {
       navLinks.classList.remove('open');
       navToggle.classList.remove('active');
       navOverlay.classList.remove('active');
-      document.body.style.overflow = '';
     }
   });
 });

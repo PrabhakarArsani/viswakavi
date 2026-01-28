@@ -81,7 +81,7 @@ section:not(.nav-overlay),
 }
 
 body.lightbox-open {
-  overflow: hidden;
+  /* Keep background dimmed via overlay only; do not block scrolling globally */
 }
 
 h1, h2, h3, h4, h5, h6 {
