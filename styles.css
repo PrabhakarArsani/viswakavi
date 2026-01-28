@@ -39,14 +39,9 @@ html {
   -webkit-backface-visibility: hidden;
 }
 
-/* Optimize scrolling containers for high refresh rates (60Hz, 90Hz, 120Hz) */
+/* Basic scrolling behavior for content areas */
 main, section, .programs-list, .gallery-grid {
   -webkit-overflow-scrolling: touch;
-  overscroll-behavior-y: contain;
-  /* GPU acceleration for smooth scrolling at native refresh rates */
-  transform: translateZ(0);
-  -webkit-transform: translateZ(0);
-  will-change: scroll-position;
 }
 
 /* Optimize images for smooth scrolling */
@@ -59,61 +54,7 @@ img {
 /* Mobile image optimizations */
 @media (max-width: 768px) {
   img {
-    content-visibility: auto;
     image-rendering: -webkit-optimize-contrast;
-  }
-}
-
-/* Isolate sections to prevent repaints during scroll - critical for smooth scrolling */
-section {
-  contain: layout style paint;
-  content-visibility: auto;
-  contain-intrinsic-size: auto 400px; /* Estimate height for better performance */
-}
-
-/* Programs list section - special handling for smooth scrolling on mobile */
-@media (max-width: 768px) {
-  section .programs-list {
-    contain: layout style;
-    content-visibility: auto;
-    contain-intrinsic-size: auto 3000px; /* Estimate for 6 cards */
-  }
-}
-
-/* Enhanced mobile optimizations */
-@media (max-width: 768px) {
-  section {
-    contain: layout style paint;
-    content-visibility: auto;
-    contain-intrinsic-size: auto 500px; /* Estimate height for better performance */
-  }
-  
-  /* Programs list section - special optimization for smooth scrolling */
-  section.programs-list {
-    contain: layout style;
-    content-visibility: auto;
-    contain-intrinsic-size: auto 3500px; /* Estimate for 6 cards with spacing */
-    /* Smooth scrolling optimizations */
-    -webkit-overflow-scrolling: touch !important;
-    transform: translateZ(0) !important;
-    -webkit-transform: translateZ(0) !important;
-    backface-visibility: hidden !important;
-    -webkit-backface-visibility: hidden !important;
-  }
-  
-  /* Optimize images for smooth scrolling */
-  img {
-    content-visibility: auto;
-    will-change: auto;
-  }
-  
-  /* Optimize cards and containers */
-  .card,
-  .program-card,
-  .gallery-item,
-  .programs-list > * {
-    contain: layout style paint;
-    content-visibility: auto;
   }
 }
 
@@ -122,21 +63,12 @@ body {
   background: #f8f9fa;
   color: #263238;
   line-height: 1.7;
-  /* Mobile performance optimizations */
+  /* Font rendering */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
-  /* High refresh rate scrolling optimizations (60Hz, 90Hz, 120Hz) */
-  -webkit-overflow-scrolling: touch;
+  /* Prevent horizontal scroll */
   overflow-x: hidden;
-  overscroll-behavior: none;
-  /* GPU acceleration for smooth high refresh rate scrolling */
-  transform: translateZ(0);
-  -webkit-transform: translateZ(0);
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-  /* Prevent layout shifts during scroll */
-  contain: layout style;
 }
 
 /* Ensure main content is always visible - prevent white screen issue */
@@ -347,7 +279,7 @@ header {
 
 .scrolling-content {
   display: flex;
-  animation: scroll-left 25s linear infinite;
+  animation: scroll-left 60s linear infinite;
   white-space: nowrap;
   animation-delay: 0s;
   /* Optimize for smooth scrolling */
@@ -378,7 +310,7 @@ header {
 
 @keyframes scroll-left {
   0% {
-    transform: translate3d(100%, 0, 0); /* Hardware acceleration */
+    transform: translate3d(0, 0, 0); /* Start text visible immediately */
   }
   100% {
     transform: translate3d(-100%, 0, 0); /* Hardware acceleration */
@@ -416,7 +348,7 @@ header {
   
   /* Optimize scrolling performance on tablets */
   .scrolling-content {
-    animation-duration: 20s; /* Slightly faster on tablets */
+    animation-duration: 60s; /* Match main scroll speed */
   }
 }
 
