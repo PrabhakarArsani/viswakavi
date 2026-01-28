@@ -26,9 +26,8 @@ button, a, input, textarea, select {
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&family=Nunito:wght@400;700&display=swap');
 
 html {
-  /* Basic smooth scrolling */
+  /* Basic mobile-friendly scrolling */
   -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
-  scroll-behavior: smooth;
 }
 
 /* Basic scrolling behavior for content areas */
@@ -68,6 +67,22 @@ html, body {
   min-height: 100%;
   height: auto;
   overflow-y: auto;
+}
+
+/* Strong mobile override: guarantee vertical scroll on small screens */
+@media (max-width: 900px) {
+  html,
+  body {
+    height: auto !important;
+    min-height: 100% !important;
+    overflow-y: auto !important;
+  }
+
+  main {
+    height: auto !important;
+    min-height: 100vh !important;
+    overflow-y: visible !important;
+  }
 }
 
 /* Ensure main content is always visible - prevent white screen issue */
