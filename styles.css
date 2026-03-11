@@ -7465,6 +7465,7 @@ section {
     min-height: auto !important;
     overflow-y: visible !important;
     overscroll-behavior: auto !important;
+    -webkit-overflow-scrolling: auto !important;
     transform: none !important;
     -webkit-transform: none !important;
   }
