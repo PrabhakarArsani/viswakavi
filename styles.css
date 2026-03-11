@@ -7466,4 +7466,11 @@ section {
     transform: none !important;
     -webkit-transform: none !important;
   }
+
+  /* Reset any remaining nested scroll containers inside main content
+     so the whole page scrolls as one on mobile */
+  main *:not(.nav-links):not(.gallery-lightbox):not(.nav-overlay) {
+    -webkit-overflow-scrolling: auto !important;
+    overscroll-behavior: auto !important;
+  }
 }
