@@ -847,35 +847,33 @@ header {
 @media screen and (max-width: 768px) {
   /* Enable hardware acceleration for smooth scrolling */
   html, body {
-    -webkit-overflow-scrolling: touch;
-    overscroll-behavior: none;
-    /* Force GPU acceleration for smooth 60/90/120Hz scrolling */
-    transform: translateZ(0);
-    -webkit-transform: translateZ(0);
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
-    perspective: 1000px;
-    -webkit-perspective: 1000px;
+    /* Keep default browser scrolling; don't force a separate scroll container */
+    -webkit-overflow-scrolling: auto;
+    overscroll-behavior: auto;
+    transform: none;
+    -webkit-transform: none;
+    backface-visibility: visible;
+    -webkit-backface-visibility: visible;
+    perspective: none;
+    -webkit-perspective: none;
   }
   
   /* Optimize main scrolling container */
   main {
-    -webkit-overflow-scrolling: touch;
-    overscroll-behavior-y: contain;
-    /* GPU acceleration for smooth scrolling */
-    transform: translateZ(0);
-    -webkit-transform: translateZ(0);
-    will-change: scroll-position;
+    -webkit-overflow-scrolling: auto;
+    overscroll-behavior-y: auto;
+    transform: none;
+    -webkit-transform: none;
+    will-change: auto;
   }
   
   /* Optimize all sections for smooth scrolling */
   section {
-    -webkit-overflow-scrolling: touch;
-    /* GPU acceleration */
-    transform: translateZ(0);
-    -webkit-transform: translateZ(0);
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
+    -webkit-overflow-scrolling: auto;
+    transform: none;
+    -webkit-transform: none;
+    backface-visibility: visible;
+    -webkit-backface-visibility: visible;
   }
   
   /* Optimize scrolling containers for smooth high refresh rate scrolling */
@@ -7465,7 +7463,6 @@ section {
     min-height: auto !important;
     overflow-y: visible !important;
     overscroll-behavior: auto !important;
-    -webkit-overflow-scrolling: auto !important;
     transform: none !important;
     -webkit-transform: none !important;
   }
