@@ -7442,3 +7442,30 @@ section {
   background: linear-gradient(90deg, #1976d2 0%, #00b894 100%);
   border-radius: 3px;
 }
+
+/* --- Final mobile scroll safety net (critical) --- */
+@media (max-width: 900px) {
+  /* Guarantee that the page itself can always scroll vertically */
+  html,
+  body {
+    height: auto !important;
+    min-height: 100% !important;
+    overflow-y: auto !important;
+    overscroll-behavior: auto !important;
+    transform: none !important;
+    -webkit-transform: none !important;
+    backface-visibility: visible !important;
+    -webkit-backface-visibility: visible !important;
+  }
+
+  /* Ensure the main content and sections don't trap scrolling */
+  main,
+  section {
+    height: auto !important;
+    min-height: auto !important;
+    overflow-y: visible !important;
+    overscroll-behavior: auto !important;
+    transform: none !important;
+    -webkit-transform: none !important;
+  }
+}
